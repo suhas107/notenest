@@ -1,0 +1,161 @@
+{
+  "info": {
+    "name": "NoteNest - Personal Notes API",
+    "description": "Import into Postman. Run 'Register' or 'Login' first: the token is saved automatically and used by every Notes request. 'Create note' saves the note id for the next requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "token", "value": "" },
+    { "key": "noteId", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Health check",
+      "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/health" }
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Demo User\",\n  \"email\": \"demo{{$randomInt}}@example.com\",\n  \"password\": \"demo123\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"demo@example.com\",\n  \"password\": \"demo123\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Current user (me)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/auth/me" }
+        }
+      ]
+    },
+    {
+      "name": "Notes",
+      "item": [
+        {
+          "name": "Create note (POST /api/notes)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('noteId', pm.response.json()._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Exam revision plan\",\n  \"content\": \"Revise React hooks, Express middleware and Mongoose schemas\",\n  \"tags\": [\"college\", \"exams\"],\n  \"pinned\": true\n}"
+            },
+            "url": "{{baseUrl}}/notes"
+          }
+        },
+        {
+          "name": "Get all notes (GET /api/notes)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/notes" }
+        },
+        {
+          "name": "Search notes (GET /api/notes?search=react)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/notes?search=react", "host": ["{{baseUrl}}"], "path": ["notes"], "query": [{ "key": "search", "value": "react" }] }
+          }
+        },
+        {
+          "name": "Filter by tag (GET /api/notes?tag=college)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/notes?tag=college", "host": ["{{baseUrl}}"], "path": ["notes"], "query": [{ "key": "tag", "value": "college" }] }
+          }
+        },
+        {
+          "name": "Pinned only (GET /api/notes?pinned=true)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/notes?pinned=true", "host": ["{{baseUrl}}"], "path": ["notes"], "query": [{ "key": "pinned", "value": "true" }] }
+          }
+        },
+        {
+          "name": "List my tags (GET /api/notes/tags)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/notes/tags" }
+        },
+        {
+          "name": "Get one note (GET /api/notes/:id)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/notes/{{noteId}}" }
+        },
+        {
+          "name": "Update note (PUT /api/notes/:id)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Exam revision plan (updated)\",\n  \"tags\": [\"college\", \"exams\", \"urgent\"],\n  \"pinned\": false\n}"
+            },
+            "url": "{{baseUrl}}/notes/{{noteId}}"
+          }
+        },
+        {
+          "name": "Toggle pin (PATCH /api/notes/:id/pin)",
+          "request": { "method": "PATCH", "url": "{{baseUrl}}/notes/{{noteId}}/pin" }
+        },
+        {
+          "name": "Delete note (DELETE /api/notes/:id)",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/notes/{{noteId}}" }
+        },
+        {
+          "name": "No token -> 401",
+          "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/notes" }
+        }
+      ]
+    }
+  ]
+}

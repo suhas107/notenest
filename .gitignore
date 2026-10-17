@@ -1,0 +1,12 @@
+node_modules/
+client/node_modules/
+client/dist/
+.env
+.env.local
+.env*.local
+.vercel
+*.log
+coverage/
+
+# Personal study notes (kept locally, not published)
+docs/VIVA-PREP.md

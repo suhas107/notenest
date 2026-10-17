@@ -1,0 +1,54 @@
+### NoteNest API - open in VS Code with the "REST Client" extension and click "Send Request"
+### Register first, then copy the token into @token below.
+
+@baseUrl = http://localhost:5000/api
+@token = paste-token-here
+@noteId = paste-note-id-here
+
+### Health check
+GET {{baseUrl}}/health
+
+### Register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{ "name": "Demo User", "email": "demo@example.com", "password": "demo123" }
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ "email": "demo@example.com", "password": "demo123" }
+
+### Current user
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### Create a note
+POST {{baseUrl}}/notes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "title": "Exam revision plan", "content": "Revise React hooks and Mongoose", "tags": ["college", "exams"], "pinned": true }
+
+### Get all notes (pinned first)
+GET {{baseUrl}}/notes
+Authorization: Bearer {{token}}
+
+### Search + filter
+GET {{baseUrl}}/notes?search=react&tag=college
+Authorization: Bearer {{token}}
+
+### Update a note
+PUT {{baseUrl}}/notes/{{noteId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "title": "Exam revision plan (updated)", "pinned": false }
+
+### Delete a note
+DELETE {{baseUrl}}/notes/{{noteId}}
+Authorization: Bearer {{token}}
+
+### Without a token -> 401
+GET {{baseUrl}}/notes
