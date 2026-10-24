@@ -1,5 +1,12 @@
 # NoteNest: Personal Notes App (MERN)
 
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
+
 A secure note-taking app where each user can **create, edit, delete, search, tag and pin** their own notes.
 Built with **MongoDB, Express, React and Node.js**.
 
@@ -8,6 +15,12 @@ Built with **MongoDB, Express, React and Node.js**.
 **Live demo:** https://notenest-notes-app.vercel.app
 
 **Demo account:** `demo@notenest.app` / `demo123` (40 sample notes; or click "Fill in the demo account" on the login page)
+
+## Screenshots
+
+| Notes dashboard | Login |
+| --- | --- |
+| ![Notes dashboard with pinned notes and tag sidebar](docs/screenshots/notes.png) | ![Login page](docs/screenshots/login.png) |
 
 ---
 
